@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Happy Birthday Jax Quartiles</title>
+<style>
+:root{--blue:#0870e8;--bg:#050505;--tile:#2d2d2f;--tray:#1d1d1f;--tray-border:#3b3b3d;--white:#f8f8f8;--muted:#b9b9be;--green:#35d07f;--bad:#ff6f67}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh}
+button{font:inherit;border:0;cursor:pointer;touch-action:manipulation;-webkit-appearance:none;appearance:none}
+.header{
+background:var(--blue);
+padding:env(safe-area-inset-top) 16px 44px;
+min-height:auto;
+overflow:visible;
+}
+.top-icons{height:46px;display:flex;justify-content:space-between;align-items:center}
+.circle-btn{width:54px;height:54px;border-radius:50%;border:2px solid rgba(255,255,255,.25);background:rgba(0,60,190,.45);color:#83ffff;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:300}
+.menu-dots{font-size:28px;letter-spacing:3px;padding-bottom:6px}
+.stats{display:grid;grid-template-columns:1fr 1.1fr 1fr;align-items:end;margin-top:8px;gap:12px}
+.rank-label,.quartile-label{font-weight:850;font-size:20px;line-height:1.1}
+.progressbar{margin-top:14px;height:26px;max-width:210px;border-radius:999px;background:rgba(0,55,175,.55);overflow:hidden}
+#rankFill{height:100%;width:0%;background:#51d1ff;border-radius:999px;transition:width .25s ease}
+.score{text-align:center}.score .num{font-size:76px;line-height:.85;font-weight:950}.score .novice{font-size:34px;font-weight:900}
+.quartiles{text-align:right}.boxes{margin-top:14px;display:flex;gap:8px;justify-content:flex-end}.box{width:34px;height:28px;border-radius:7px;background:rgba(0,55,175,.55)}.box.filled{background:#51d1ff}
+.intro{
+display:block;
+font-size:20px;
+font-weight:900;
+text-align:center;
+color:#ffffff;
+margin:22px auto 0;
+line-height:1.35;
+max-width:680px;
+text-shadow:0 2px 6px rgba(0,0,0,.35);
+padding:14px 16px;
+border-radius:18px;
+background:rgba(0,40,130,.28);
+}
+.content{padding:0 20px 30px}
+.tray{margin:18px auto 0;min-height:104px;background:var(--tray);border-radius:28px;box-shadow:0 7px 0 var(--tray-border);display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;position:relative;z-index:2}
+#trayText{font-size:24px;font-weight:850;color:var(--muted);line-height:1.25}#trayText.word{color:white;font-size:26px}#trayText.good{color:var(--green)}#trayText.bad{color:var(--bad)}
+.solved-strip{margin-top:18px;min-height:44px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.pill{background:#141414;border:1px solid #333;color:#ddd;border-radius:999px;padding:8px 11px;font-size:13px;font-weight:800}
+.grid{margin:74px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:700px}
+.tile{height:84px;border-radius:14px;background:var(--tile);color:white;font-size:30px;font-weight:950;letter-spacing:-.5px;box-shadow:0 7px 0 #202022;display:flex;align-items:center;justify-content:center;user-select:none;-webkit-user-select:none;transition:transform .12s ease, background .12s ease, box-shadow .12s ease, opacity .12s ease;position:relative}
+.tile.pop{animation:pop .22s ease}@keyframes pop{0%{transform:scale(1)}45%{transform:scale(.92)}100%{transform:scale(1)}}
+.tile.selected{background:#4a4a4e;box-shadow:0 0 0 4px rgba(8,112,232,.45),0 5px 0 #202022;transform:translateY(2px)}
+.tile.selected:after{content:attr(data-order);position:absolute;right:7px;top:6px;width:20px;height:20px;border-radius:50%;background:var(--blue);color:white;font-size:12px;display:flex;align-items:center;justify-content:center}
+.tile.locked{opacity:.28;filter:saturate(.5);box-shadow:none;pointer-events:none}
+.controls{margin:74px auto 0;max-width:700px;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;gap:18px}.round{margin:auto;border-radius:50%;background:#1f1f21;color:#bfbfc5;display:flex;align-items:center;justify-content:center}.shuffle,.list{width:54px;height:54px;font-size:28px}.check{width:112px;height:112px;font-size:72px;color:#5a5a5f;background:#1c1c1e}.check.ready{background:#2a2a2c;color:white}
+.message{height:30px;text-align:center;margin-top:18px;font-size:17px;font-weight:850;color:var(--muted)}.message.bad{color:var(--bad)}.message.good{color:var(--green)}
+.reveal{display:none;margin:30px auto 0;max-width:700px;text-align:center;background:linear-gradient(135deg,var(--blue),#004db7);border-radius:28px;padding:28px 18px;box-shadow:0 8px 0 #003577}.reveal h2{font-size:34px;margin:0 0 8px}.reveal p{font-size:24px;font-weight:950;line-height:1.25;margin:0}
+details{max-width:700px;margin:24px auto 0;color:#aaa;text-align:center}summary{color:#777;font-weight:800}ol{text-align:left;display:inline-block;line-height:1.8}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:99;display:none}.dot{position:absolute;top:-20px;width:10px;height:16px;animation:fall 2.8s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+@media(max-width:520px){.header{min-height:176px;padding-left:16px;padding-right:16px}.circle-btn{width:46px;height:46px;font-size:30px}.rank-label,.quartile-label{font-size:18px}.score .num{font-size:66px}.score .novice{font-size:31px}.box{width:26px;height:23px}.content{padding-left:16px;padding-right:16px}.tray{min-height:86px;border-radius:24px}#trayText{font-size:22px}.grid{gap:10px;margin-top:72px}.tile{height:68px;border-radius:12px;font-size:25px;box-shadow:0 6px 0 #202022}.controls{margin-top:66px}.check{width:92px;height:92px;font-size:60px}}
+</style>
+</head>
+<body>
+<div class="confetti" id="confetti"></div>
+<section class="header">
+<div class="top-icons"><button class="circle-btn" onclick="resetGame()" aria-label="Reset">×</button><button class="circle-btn menu-dots" onclick="toggleAnswers()" aria-label="Menu">•••</button></div>
+<div class="stats"><div><div class="rank-label">Next Rank</div><div class="progressbar"><div id="rankFill"></div></div></div><div class="score"><div class="num" id="score">0</div><div class="novice">Novice</div></div><div class="quartiles"><div class="quartile-label">Quartiles</div><div class="boxes" id="boxes"><span class="box"></span><span class="box"></span><span class="box"></span><span class="box"></span><span class="box"></span></div></div></div>
+<div class="intro">Happy Birthday Jax! We love you very much. Solve this puzzle to figure out your gift.</div>
+</section>
+<main class="content">
+<section class="tray"><div id="trayText">Words you find appear here</div></section>
+<div class="solved-strip" id="solved"></div>
+<section class="grid" id="grid">
+<button class="tile" data-tile="ven">ven</button><button class="tile" data-tile="or">or</button><button class="tile" data-tile="por">por</button><button class="tile" data-tile="blow">blow</button>
+<button class="tile" data-tile="cel">cel</button><button class="tile" data-tile="ous">ous</button><button class="tile" data-tile="ss">ss</button><button class="tile" data-tile="bra">bra</button>
+<button class="tile" data-tile="ble">ble</button><button class="tile" data-tile="im">im</button><button class="tile" data-tile="gla">gla</button><button class="tile" data-tile="t">t</button>
+<button class="tile" data-tile="ad">ad</button><button class="tile" data-tile="tion">tion</button><button class="tile" data-tile="mem">mem</button><button class="tile" data-tile="ing">ing</button>
+<button class="tile" data-tile="tur">tur</button><button class="tile" data-tile="ant">ant</button><button class="tile" data-tile="e">e</button><button class="tile" data-tile="a">a</button>
+</section>
+<section class="controls"><button class="round shuffle" onclick="shuffleTiles()" aria-label="Shuffle">⇄</button><button class="round check" id="check" onclick="submitWord()" aria-label="Check">✓</button><button class="round list" onclick="toggleAnswers()" aria-label="Answers">☷</button></section>
+<div class="message" id="message"></div>
+<section class="reveal" id="reveal"><h2>🎉 Surprise! 🎉</h2><p>Your gift is a<br>glass blowing experience!</p></section>
+<details id="answers"><summary>Emergency answer key</summary><ol><li>GLA + SS + BLOW + ING = GLASS BLOWING</li><li>CEL + E + BRA + TION = CELEBRATION</li><li>AD + VEN + TUR + OUS = ADVENTUROUS</li><li>IM + POR + T + ANT = IMPORTANT</li><li>MEM + OR + A + BLE = MEMORABLE</li></ol></details>
+</main>
+<script>
+(function(){
+var answers={"GLASSBLOWING":"GLASS BLOWING","CELEBRATION":"CELEBRATION","ADVENTUROUS":"ADVENTUROUS","IMPORTANT":"IMPORTANT","MEMORABLE":"MEMORABLE"};
+var required=["GLASSBLOWING","CELEBRATION","ADVENTUROUS","IMPORTANT","MEMORABLE"];
+var current=[],solved={},touchGuard=false;
+var tray=document.getElementById("trayText"),msg=document.getElementById("message"),solvedEl=document.getElementById("solved"),score=document.getElementById("score"),check=document.getElementById("check"),reveal=document.getElementById("reveal"),confetti=document.getElementById("confetti"),rankFill=document.getElementById("rankFill"),boxes=Array.from(document.querySelectorAll(".box"));
+function normalize(s){return String(s||"").toUpperCase().replace(/[^A-Z]/g,"")}
+function built(){return normalize(current.map(function(i){return i.value}).join(""))}
+function vibrate(ms){try{if(navigator.vibrate)navigator.vibrate(ms||10)}catch(e){}}
+function updateTray(cls,text){tray.className=cls||"";tray.textContent=text||(current.length?current.map(function(i){return i.value}).join(" + "):"Words you find appear here");check.classList.toggle("ready",current.length===4)}
+function pop(tile){tile.classList.remove("pop");void tile.offsetWidth;tile.classList.add("pop");setTimeout(function(){tile.classList.remove("pop")},240)}
+function addTile(tile){if(!tile||tile.disabled||tile.classList.contains("locked"))return;if(tile.classList.contains("selected")){removeTile(tile);return}if(current.length>=4){msg.textContent="Quartiles use exactly 4 segments. Hit ✓ or deselect one.";msg.className="message bad";vibrate(35);return}current.push({el:tile,value:tile.dataset.tile});tile.classList.add("selected");tile.dataset.order=current.length;pop(tile);vibrate(10);msg.textContent="";msg.className="message";updateTray("word",current.map(function(i){return i.value}).join(" + "))}
+function removeTile(tile){var idx=current.findIndex(function(i){return i.el===tile});if(idx===-1)return;current.splice(idx,1);tile.classList.remove("selected");delete tile.dataset.order;current.forEach(function(i,n){i.el.dataset.order=n+1});updateTray("word",current.length?current.map(function(i){return i.value}).join(" + "):"Words you find appear here");vibrate(8)}
+function clearSelected(){current.forEach(function(i){i.el.classList.remove("selected");delete i.el.dataset.order});current=[];updateTray("","Words you find appear here")}
+window.submitWord=function(){if(current.length!==4){msg.textContent="Choose exactly 4 segments.";msg.className="message bad";vibrate(35);return}var w=built();if(answers[w]){if(solved[w]){msg.textContent="Already found.";msg.className="message";clearSelected();return}solved[w]=true;current.forEach(function(i){i.el.classList.remove("selected");i.el.classList.add("locked");i.el.disabled=true;delete i.el.dataset.order});current=[];updateTray("good",answers[w]);msg.textContent="Nice!";msg.className="message good";vibrate(25);updateSolved()}else{tray.className="bad";msg.textContent="Not quite. Try a different 4-segment combo.";msg.className="message bad";vibrate(40)}}
+function updateSolved(){solvedEl.innerHTML="";var found=required.filter(function(w){return solved[w]});found.forEach(function(w){var p=document.createElement("span");p.className="pill";p.textContent=answers[w];solvedEl.appendChild(p)});score.textContent=found.length*100;rankFill.style.width=(found.length/required.length*100)+"%";boxes.forEach(function(b,i){b.classList.toggle("filled",i<found.length)});if(found.length>=required.length){reveal.style.display="block";launch()}}
+window.shuffleTiles=function(){var grid=document.getElementById("grid");var tiles=Array.from(grid.children);for(var i=tiles.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));grid.appendChild(tiles[j]);tiles.splice(j,1)}msg.textContent="Tiles shuffled.";msg.className="message";vibrate(10)}
+window.toggleAnswers=function(){var d=document.getElementById("answers");d.open=!d.open}
+window.resetGame=function(){document.querySelectorAll(".tile").forEach(function(t){t.disabled=false;t.classList.remove("locked","selected","pop");delete t.dataset.order});current=[];solved={};reveal.style.display="none";score.textContent="0";rankFill.style.width="0%";boxes.forEach(function(b){b.classList.remove("filled")});solvedEl.innerHTML="";msg.textContent="";confetti.dataset.done="";updateTray("","Words you find appear here")}
+function launch(){if(confetti.dataset.done==="yes")return;confetti.dataset.done="yes";confetti.style.display="block";var colors=["#0870e8","#ffffff","#55f6ff","#ff6f67"];for(var i=0;i<90;i++){var d=document.createElement("div");d.className="dot";d.style.left=Math.random()*100+"vw";d.style.background=colors[i%colors.length];d.style.animationDelay=Math.random()*.8+"s";d.style.animationDuration=2+Math.random()*1.8+"s";confetti.appendChild(d)}setTimeout(function(){confetti.style.display="none";confetti.innerHTML=""},4400)}
+document.getElementById("grid").addEventListener("click",function(e){if(touchGuard)return;var t=e.target.closest(".tile");if(!t)return;e.preventDefault();addTile(t)},false);
+document.getElementById("grid").addEventListener("touchend",function(e){var t=e.target.closest(".tile");if(!t)return;e.preventDefault();touchGuard=true;addTile(t);setTimeout(function(){touchGuard=false},450)},false);
+updateTray("","Words you find appear here");
+})();
+</script>
+</body>
+</html>
